@@ -1,0 +1,82 @@
+// Dutch national flag Algorithm
+TC = O(n) SC = O(1) uses one pass.
+
+//The basic idea is to have 0(s) at 0 to low-1,
+// 2(s) at  high + 1 to nums.size()-1
+// and 1(s) in the middle section.
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        
+        int low = 0;
+        int mid = 0;
+        int high = nums.size()-1;
+        
+       while(mid <= high){
+            
+            switch(nums[mid]){
+                    
+                    //If you see a 0 at mid pointer 
+                    // swap the elements at mid and low
+                    // increment low and mid
+                case 0  : swap(nums[low++],nums[mid++]);
+                        break;
+                    
+                    // If you see a 1, increment mid.
+                case 1 : mid++;
+                        break;
+                    
+                    // If you see a 2, decrement high
+                    // here mid is not incremented because high will hold the values not
+                    // yet encountered by mid unlike in the case of low.
+                    
+                case 2 : swap(nums[mid],nums[high--]);
+                        break;
+            }   
+            
+        }
+        
+    }
+};
+
+//################################################################################################################################################################//
+
+//Another approach is like counting sort.
+//This approach is less efficient than the above because it sorts the array in more than one pass.
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        
+        int count0 = 0;
+        int count1 = 0;
+        int count2 =0;
+        
+        
+        for(int i=0;i<nums.size();i++){
+            if(nums[i] == 0){
+                count0++;
+            }
+            else if(nums[i] == 1){
+                count1++;
+                
+            }
+            else if(nums[i] == 2){
+                count2++;
+            }
+        }
+        
+        for(int i = 0; i< count0; i++){
+            
+            nums[i] = 0;
+        }
+        for(int i = count0; i<count0+count1; i++){
+            nums[i] = 1;
+            
+        }
+        for(int i = count0+count1; i<count0+count1+count2; i++){
+            nums[i] = 2;
+        }
+    }
+};
