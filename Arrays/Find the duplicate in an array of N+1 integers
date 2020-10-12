@@ -1,0 +1,45 @@
+//FLOYD WARSHAL's Cycle detection algorithm.
+// or tortoise and hare method.
+// this solution works because there are 1 to N+1 elements and each element is represented by index i-1
+// a loop is formed where two indices point to a single element
+//[1,3,4,2,2]
+ //0,1,2,3,4 - indices
+ 
+ // 1 -> 3 -> 2 -> 4 -> 2
+ // This graph is formed using the indices i.e nums[0] = 1 then what is at nums[1] i.e 3 then what is at nums[3] and so on..
+ // so here cycle is formed at 2 because indices 2 and 4 point to number 2.
+ 
+ //Same approach is used for loop detection in linkedList.
+ class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        
+        int fast = nums[0];
+        int slow = nums[0];
+ 
+ //Do while loop is used to carry out atleast one iteration
+ // to use while loop initialize fast = numms[nums[0]] because the pointers should start at
+ //fast = nums[nums[fast]]; slow = nums[slow]; before their equality is checked.
+ 
+ // This loop finds the point of collision.
+        do{
+            fast = nums[nums[fast]];
+            slow = nums[slow];
+            
+        }while(slow != fast);
+        
+        //Now reset the fast pointer to start and move both pointers
+        // by 1 this time.
+        // If you use while loop instead of do while above then do fast = 0 here
+        fast = nums[0];
+        
+        // Loop to find the duplicate number.
+        // or the cycle beginning.
+        while(fast != slow){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        
+        return slow;
+    }
+};
