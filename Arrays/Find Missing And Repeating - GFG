@@ -1,0 +1,146 @@
+// First approach
+// Bit manipulation
+// The basic idea is to Xor 1 to N digits then Xor all the elements of the array and then
+//Xor these two Xors to get a number.
+//Now the number you get find its rightmost set bit (say 3rd from left) 
+//Since this is a XOR operation therefore the either Missing Number M's
+//3rd From last bit will be 1 or Repeating Number R's.
+
+//Now form two buckets in which you put numbers that have 3rd bit or the rightmost set bit
+//you found as set and in another bucket you put numbers whose that particular bit is not set.
+//Xor these buckets for all the elements 1 to N and for all the elements in the Array.
+
+//Lastly in the bucket you will be left with missing and repeating numbers
+// All others will get cancelled out.
+
+class Solution{
+public:
+    int *findTwoElement(int *arr, int n) {
+        // code here
+        int expectedXor = 0;
+        int currentXor = 0;
+        int resultingXor = 0;
+        int x = 0,y = 0;
+        int rightmostSetBit; 
+        for(int i = 0; i< n; i++){
+            expectedXor ^= (i + 1);
+        
+            currentXor ^= arr[i];
+        }
+        
+        resultingXor = expectedXor ^ currentXor;
+        
+        // finding the rightmost set bit using bit manipulation.
+        
+       //Finding the lowest set bit turns out to be surprisingly easy, 
+       //with the right combination of bitwise and arithmetic operators. 
+       //Suppose we wish to find the lowest set bit of x (which is known to be non-zero). 
+       //If we subtract 1 from x then this bit is cleared, 
+       //but all the other one bits in x remain set. 
+       //Thus, x & ~(x - 1) consists of only the lowest set bit of x. 
+       //However, this only tells us the bit value, not the index of the bit.
+        
+        rightmostSetBit = resultingXor & ~(resultingXor - 1);
+        
+        for(int i = 1; i<=n; i++){
+            
+            if(i & rightmostSetBit){
+                x ^= i;
+            }
+        
+            else{
+                y ^= i;
+            }
+            
+        }
+        
+        for(int i=0; i<n; i++){
+            
+            if(arr[i] & rightmostSetBit){
+                
+                x ^= arr[i];
+            }
+            else{
+                
+                y^=arr[i];
+            }
+        }
+        int res[2];
+        int *p = res;
+        int xfound = 0;
+        int yfound = 0;
+        
+        //Linearly traverse through the array to find the 
+        // missing and repeating elements as they can be random in
+        // x and y.
+        
+        for(int i=0; i<n; i++){
+            
+            if(arr[i] == x){
+                xfound = 1;
+            }
+            else if(arr[i] == y){
+                yfound = 1;
+            }
+        }
+        if(xfound && !yfound){
+            res[0] = x;
+            res[1] = y;
+            
+        }
+        else if(!xfound && yfound){
+            res[1] = x;
+            res[0] = y;
+        }
+        return p;
+    }
+};
+
+//####################################################################################################################################################################//
+
+//Second approach
+
+// Based on equation formation
+// Compute the sum of 1 to N using formula n*(n+1)/2 and sum of squares using the formula n*(n+1)*(2*n+1)/2
+// Now subtract the array elements from sum and square of array elements from square sum to get two sums sum1 and
+sum2
+// Let the missing number be M and repeating number be R
+// Therefore M - R = S1
+// M^2 - R^2 = S2
+
+//So M + R = S2/S1
+//&  M - R = S1
+// 2M = S2/S1 + S1
+// So M = (S1 + S2/S1)/2 & R = M - S1
+
+//NOTE : Keep all the values in long long int as it can go out of bounds for an int
+
+class Solution{
+public:
+    int *findTwoElement(int *arr, int size) {
+        // code here
+        
+        //Even n should be long long int
+        long long int n = size;
+        long long int sumN = ( n * ( n + 1 ))/2;
+        long long int squareSumN =  ( n * ( n + 1) * ( 2*n + 1 ))/6; 
+        long long int missingNumber = 0,repeatingNumber = 0;
+        int result[2];
+        int *p = result;
+         for(int i = 0; i<n; i++){
+         
+             sumN -= (long long int)arr[i];
+             squareSumN -= (long long int)arr[i]*(long long int)arr[i]; 
+             
+         }
+         
+        missingNumber = (sumN + squareSumN/sumN)/2;
+        repeatingNumber = missingNumber - sumN;
+        
+    
+         result[0] = repeatingNumber;
+         result[1] = missingNumber;
+    
+    return p;
+    }
+};
