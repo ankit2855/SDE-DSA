@@ -1,0 +1,62 @@
+// Using Gap algorithm
+// The idea is to find gap i.e ceil(n + m / 2)
+// and then compare items having this gap in between and treat two arrays
+// like a single continuous array.
+// reduce gap = gap/2 until gap = 1;
+Time complexity = O((n+m)*log(n+m)) time with O(1) extra space
+// log(n+m) since gap i.e m+n decreases by 2 everytime
+// and n times we run first loop and m times second loop
+// For algorithm explanation view 
+https://www.youtube.com/watch?v=hVl2b3bLzBw&list=PLgUwDviBIf0rPG3Ictpu74YWBQ1CaBkm2&index=4 
+
+class Solution{
+public:
+
+    int getGap(int gap){
+        
+        if(gap <= 1){
+            return 0;
+        }
+        
+        //Not using ceil here since gap is an integer and therefore 3/2 will
+        // give 1 and not 1.5.
+        
+        return (gap / 2) + (gap % 2);
+    }
+    
+   
+	void merge(int ar1[], int ar2[], int m, int n) {
+	    // code here
+	    
+	    int gap = (m+n);
+	    int i,j;
+	    
+	    for(gap = getGap(gap); gap >0; gap = getGap(gap)){
+	        
+	        for(i = 0; i+gap<m ; i++){
+	            
+	            if(ar1[i] > ar1[i+gap]){
+	                swap(ar1[i],ar1[i+gap]);
+	            }
+	        }
+	        for(j = gap > m ? gap - m : 0; i < m && j< n; i++,j++){
+	            
+	            if(ar1[i] > ar2[j]){
+	                swap(ar1[i],ar2[j]);
+	            }
+	        }
+	        
+	        if(j<n){
+	            for(j=0; j+gap<n; j++){
+	                
+	                if(ar2[j] > ar2[j+gap]){
+	                swap(ar2[j],ar2[j+gap]);
+                    
+	                    
+	                }
+	            }
+	        }
+	        
+	    }
+} 
+};
