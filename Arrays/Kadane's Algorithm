@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution{
+    
+    public:
+    int maxSubarraySum(vector<int> &A){
+        
+        int n = A.size();
+        int result =A[0];
+        int currentMax= A[0];
+        for(int i=1;i<n; i++){
+            
+            currentMax = max(A[i], currentMax + A[i]);
+            result = max(result,currentMax);
+        }
+        return result;
+    }
+};
+
+int main() {
+	//code
+int t;
+cin>>t;
+
+while(t--){
+  int n;
+  vector<int>A;
+  cin>>n;
+  for(int i=0;i<n;i++){
+    int temp;
+    cin>>temp;
+    A.push_back(temp);
+  }
+  Solution obj;
+  int result = obj.maxSubarraySum(A);
+  cout<<result<<endl;
+}
+
+	return 0;
+}
