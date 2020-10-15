@@ -1,0 +1,82 @@
+// The basic idea is to sort the array first so that the 1st digit of every interval is in increasing order and
+// maintain a temporary array of two elements
+// or of the size of each interval. Store the first element of array in this temporary array and compare
+// for every element in the array including the first one and see if temporaryArray[1] >= Arr[i][0] 
+// if yes then merge these else push this temporaryArray interval in mergedIntervals array and reassign
+// the tempArray to the current Element.
+// At the last step you will be left with the last interval in the tempArray, push this in mergedIntervals Array and
+// the job is done.
+
+using namespace std;
+
+class Solution{
+    
+    public:
+    
+    vector<vector<int>>overlappIntervals(vector<vector<int>> &A){
+        
+        vector<vector<int>>mergedIntervals;
+        vector<int>tempArray;
+ 
+ //If there is no interval, return.
+      if(A.size() < 1) return mergedIntervals;
+        
+        // sort the intervals based on 1st value i.e A[i][0].
+        sort(A.begin(),A.end());
+        
+        tempArray = A[0];
+        
+        for(int i = 0; i<A.size();i++){
+            
+            if(A[i][0] <= tempArray[1]){
+                
+                // For eg.
+                // tempArray = [1,3] and A[i] = [2,6]
+                // so tempArray merges and becomes [1,6] 
+                // since 3 <= 2.
+                tempArray[1] = max(tempArray[1],A[i][1]);
+            }
+            else{
+                mergedIntervals.push_back(tempArray);
+                tempArray = A[i];
+            }
+        }
+        //Push the last remaining interval in mergedIntervals Array.
+        mergedIntervals.push_back(tempArray);
+        
+       return mergedIntervals;
+    }
+};
+
+int main() {
+	//code
+	int t;
+	cin>>t;
+	
+	while(t--){
+	    int n;
+	    cin>>n;
+	    int i,j;
+	    vector<vector<int>>arr;
+	    for(int i =0; i<n; i++){
+	        vector<int>temp;
+	        int t1,t2;
+	        cin>>t1>>t2;
+	       // cout<<t1<<t2<<endl;
+	        temp.push_back(t1);
+	        temp.push_back(t2);
+	        arr.push_back(temp);
+	    }
+	    Solution obj;
+	     vector<vector<int>>ans=obj.overlappIntervals(arr);
+	    
+	    for(int i=0;i<ans.size(); i++){
+	        for(j=0;j<2;j++){
+	            cout<<ans[i][j]<<" ";
+	        }
+	    }
+	cout<<endl;
+	    
+	}
+	return 0;
+}
