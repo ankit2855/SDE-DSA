@@ -6,7 +6,7 @@
 // the tempArray to the current Element.
 // At the last step you will be left with the last interval in the tempArray, push this in mergedIntervals Array and
 // the job is done.
-// Time complexity: O(N + NLOGN)
+// Time complexity: O(N) + O(NLOGN)
 
 using namespace std;
 
