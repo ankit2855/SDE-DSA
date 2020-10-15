@@ -1,0 +1,54 @@
+// Leetcode
+
+// The idea is to use the first row and first column of the matrix
+// as auxiliary arrays so that we can mark whether a current element is zero or not
+// Say a[i][j] element is 0 so we mark arr[i][0] and arr[0][j] = 0;
+
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+  
+    // Since first cell for both first row and first column is the same i.e. matrix[0][0]
+      // We can use an additional variable for either the first row/column.
+      // For this solution we are using an additional variable for the first column
+      // and using matrix[0][0] for the first row.
+      
+        int col0 = 1;
+       
+        for(int i =0 ;i<matrix.size();i++){
+            if(matrix[i][0] == 0) col0 =0;
+            
+            for(int j = 1; j<matrix[i].size(); j++){
+                
+               // If an element is zero, we set the first element of the corresponding row and column to 0
+                if(matrix[i][j] == 0){
+                    matrix[0][j] = matrix[i][0] = 0;
+                }
+            }
+        }
+        
+        //Now start iterating backwards since we do not want to modify the first element of row and column
+        // until the whole row/column has been traversed.
+        
+        for(int i = matrix.size() -1; i>=0; i--){
+            
+            for(int j = matrix[i].size()-1; j >=1; j--){
+                
+                // Now check if first element of row or first element of column is 0.
+                
+                if(matrix[i][0] == 0 || matrix[0][j] == 0){
+                    matrix[i][j] = 0;
+                }
+            }
+        
+        // Setting the first element of row as 0 after the row has been traversed.
+        // We cannot do this before because it will satisfy the above condition "matrix[i][0] == 0"
+        // even when actually matrix[i][0] was not 0, it was made 0 because the column contained 0.
+        
+            if(col0 == 0){
+                matrix[i][0] = 0;
+            }
+            
+        }
+    }
+};
