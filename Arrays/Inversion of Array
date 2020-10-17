@@ -1,0 +1,126 @@
+//GFG
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution{
+    
+    public:
+    
+   long long int _merge(int A[],int temp[],int left,int mid, int right){
+        
+        int i = left;
+        // k = left since we want to change the array from the index
+        // which is present in left so that we can later map this easily in
+        // the original array at the correct index.
+        int k = left;
+        long long int inversionCountForThisStep = 0;
+        // first array ranges from left to mid
+        // second array ranges from mid+1 to right.
+        // and here mid is passed as mid+1.
+        
+        int j = mid;
+        
+        while(i<mid && j<=right){
+            
+            if(A[i] <= A[j]){
+                temp[k++] = A[i++];
+            }
+            else {
+                
+                temp[k++] = A[j++];
+            
+            // Since left array ends at mid - 1.
+            // so there are mid - 1 - i + 1 elements in between
+            // i and mid - 1 which are greater than A[j].
+        
+                inversionCountForThisStep += mid - i;
+                
+            }
+             
+        }
+        
+        //Only one of the below loops will be executed
+        // since the above loop will be exited only when either one
+        // of these conditions fail.
+        
+        while(i<=mid-1){
+            
+            temp[k++] = A[i++];
+        }
+        while(j<=right){
+            temp[k++] = A[j++];
+        }
+        
+        for(int i = left; i<=right; i++){
+            
+            A[i] = temp[i];
+        }
+        
+        return inversionCountForThisStep; 
+    }
+    
+ long long int _mergeSort(int A[],int temp[],int left, int right){
+     
+     int mid;
+     long long int inversions = 0;
+     if(right > left){
+         
+        //  Note : Inversion of an element
+        // e = count of inversions of its left children + count of inversion of its right children + 
+        // the inversion count when we merge the left and right children of this element.
+         
+         mid = (right+left)/2;
+        
+        //Incrementing inversions so that we transfer the inversions from
+        // child elements to parent elements when the left to mid range of array is computed.
+         inversions +=_mergeSort(A,temp,left,mid);
+         
+         //Incrementing inversions so that we transfer the inversions from
+        // child elements to parent elements when the mid+1 to right range of array is computed.
+         inversions += _mergeSort(A,temp,mid+1,right);
+         
+         // Incrementing inversions so that we can now compute the inversions till this step
+         // by adding all the left and right children's inversions and then the inversions when you
+         // merge these two children.
+         
+         inversions += _merge(A,temp,left,mid+1,right);
+         
+     }
+     return inversions;
+ }
+    
+};
+
+ 
+
+
+int main() {
+	//code
+	
+	int t;
+	cin>>t;
+	
+	while(t){
+	    
+	    int n;
+	    cin>>n;
+	    
+	    int arr[n];
+	    
+	    for(int i = 0; i<n; i++){
+
+	        cin>>arr[i];
+	    }
+	    
+	    Solution obj;
+	 
+	    int temp[n];
+	    long long int inversions = obj._mergeSort(arr,temp,0,n-1);
+	    cout<<inversions<<endl;
+	
+	    t--;
+	}
+	return 0;
+	
+}
