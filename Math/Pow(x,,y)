@@ -1,0 +1,64 @@
+// The brute force is to loop 1 to n and keep multiplying x to ans.
+// This is not an optimal solutiom.
+
+//Optimal Solution : 
+
+//The idea is that when power is even for eg. 2^10 it can be written as (2*2)^5.
+// So x becomes x*x and n gets divided by 2.
+
+//When n is odd, for eg 4^5 then it can be written as
+// 4 * 4^4 i.e 4 * (16)^2.
+// Now we can save this 4 that came because of odd power in ans, and proceed by dividing the power further.
+//ans = ans * 4.
+// x = (16*16)^1.
+// ans = ans * x & n = n-1.
+// ans = 4 * 256 n=0. \
+//Loop stops.
+
+//TC : log2(n).
+// SC : O(1).
+
+class Solution {
+public:
+    double myPow(double x, int n) {
+        
+        double ans = 1.0;
+        
+        //Maintain a copy of n since n is changed in execution 
+        // and we need to check at the n if it was negative then we have to compute the ans as 1/ans.
+        
+        //This is taken as long long int because integer value ranges from 	-2,147,483,648 to 2,147,483,647.
+        // Now when 	-2,147,483,648 is converted to + number it becomes 2,147,483,648 which is out of integer range.
+        // So overflow occurs.
+        
+        long long int copyOfN = n;
+        
+        if(copyOfN<0) copyOfN = -1*copyOfN;
+        
+        while(copyOfN){
+            
+            if(copyOfN % 2 == 0){
+              
+              // If n is even divide n by 2 and multiply x by itself.
+                x = x*x;
+                copyOfN /=2;
+            }
+            else if(copyOfN % 2 == 1){
+                
+                //if n is odd that means we have an extra x.
+                // Take this extra x into answer and 
+                // now decrement n to make it even.
+                ans = ans*x;
+                copyOfN = copyOfN-1;
+                
+            }
+        }
+        //If n was a negative power then the final ans will be 1/x^n.
+        // Since x^-n = i/x^n.
+        
+        if(n < 0){
+            ans = (double)(1.0)/(double)(ans);
+        }
+        return ans;
+    }
+};
