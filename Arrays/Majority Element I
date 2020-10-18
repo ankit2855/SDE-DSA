@@ -1,0 +1,59 @@
+// The brute force will be to maintain a frequency array to store the count of each element and return the element whose count is greater 
+// than n/2. TC : O(n)
+
+// A better approach will be to maintain a hash map that stores a key value pair of elements and their counts.
+// Return the element whose count > n/2. TC : O(nlogn) worst case scenario in maps (C++).
+
+// The most optimal solution is to use Moore's Voting Algorithm.
+// The idea is to maintain two variables candidate and count.
+// Increment the count every time you see an element equal to candidate.
+// Decrement the count everytime you see a element not equal to candidate.
+// if count = 0 then reinitialize the candidate as current element.
+
+// This approach works since the majority element is bound to be present more than n/2 times in the array.
+// So when the count = 0. This means the majority element and the non majority elements have cancelled each other.
+// Now from the left over elements we will find the majority element because it cannot be cancelled out completely by non majority elements.
+// Since it occurs more than n/2 times.
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        
+        int count = 0;
+        int candidate = 0;
+        int i = 0;
+        
+        while(i<nums.size()){
+            
+            // When count = 0, reinitialize the candidate to the current element and set its count =1.
+            if(count == 0){
+                 candidate = nums[i];
+                    count = 1;
+            }
+            
+            // If current element is not equal to candidate then decrement the count.
+            else if(nums[i] != candidate){
+                count--;
+            }
+            // If the current element is equal to candidate then increment the count.
+            else{
+               count++;
+            }
+        i++;
+        }
+        //After this we get the candidate element that 'can' be a majority element.
+        //So in the next step we linerly traverse through the array and if the count of 
+        // candidate element > n/2 then we return the candidate element as the majority element.
+        // else return -1.
+        count=0;
+        for(i =0 ;i<nums.size(); i++){
+        
+        if(nums[i] == candidate){
+                count++;
+            }
+        }
+    if(count > nums.size()/2) return candidate;
+    
+    return -1;
+    }
+};
