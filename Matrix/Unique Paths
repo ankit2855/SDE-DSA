@@ -1,0 +1,82 @@
+//Excellent Question, asked a lot of times in google.
+
+// The brute force approach is to use recursion. The TC & SC in this solution is exponential.
+// At every i,j index you can either move down or move right.
+
+int countPaths(int i,int j, int n, int m){
+
+//out of bounds.
+if(i>=n || j >=m) return 0;
+
+//reached destination.
+if(i == n-1 && j==m-1) return 1;
+
+else return countPaths(i+1,j) + countPaths(i,j+1);
+
+}
+
+//################################################################################################################################################################//
+
+//Now another approach is an optimization of previous approach.
+// We simply use dp to minimize the time complexity of the above approach.
+// The TC becomes o(n*m) and SC becomes o(n*m).
+// Simply form a n*m matrix and fill it with -1.
+// Now at each step of recursion we first check if we already have the result stored of this step,
+// if not then we go in the recursion but store the result in matrix before returning the result.
+ 
+int countPaths(int i,int j, int n, int m,vector<vector<int>> &dp){
+
+//out of bounds.
+if(i>=n || j >=m) return 0;
+
+//reached destination.
+if(i == n-1 && j==m-1) return 1;
+
+if(dp[i][j] != -1) return dp[i][j];
+
+else return dp[i][j] = countPaths(i+1,j) + countPaths(i,j+1);
+
+}
+//################################################################################################################################################################//
+
+// The most optimal solution is combination.
+// Since we can only take right or down there will be 
+// m - 1 rights if there are m columns because we won't count matrix[0][0]
+// and n -1 downs if there are n columns because we won't count matrix[n-1][m-1].
+// Now let's say there are 3 cols and 2 row so there will be 3 - 1 = 2 rights
+// and 2 -1 downs. So at any point our steps will contain 2 rights and 1 down.
+// _ _ _ now lets say you fill R R first so only one blank is left where D is filled.
+// Similarly if you fill D first so there will be remaining 2 blanks only where R can be filled.
+// So we can either fill D or R and we will get all the unique combinations.
+// The total number will be m -1 + n -1 = m+n-2;
+// and r can be either m - 1 or n -1 because you can choose either one from D and R and the remaining places will be filled by
+// the other one.
+// TC = O(m -1) + O(n-1)
+// SC = O(1).
+
+// Now when you find combination there is a shortcut.
+// For eg 10C3 = 10*9*8/3*2*1. i.e decrement and multiply the numerator 3 times i.e denominator times and similarly do with the denominator.
+
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        
+        int N = m+n-2;
+        int R = m - 1;
+        //Result is taken in double so that it does not exceed the integer range on calculation of nCr.
+        double result = 1;
+        for(int i = 1; i<=R; i++){
+            // This is tricky and is used to do the above trick.
+            // Lets say m = 3 n = 7 so N = 8.
+            // now result = 8 * 9 * 10 / 1 * 2 * 3.
+          
+          // So it is calculated as 1 * (8 - 2 + i(=1) ) * (8 - 2 + i(=2) )/ i.
+          // 8 - 2 + 1 * 8 - 2 + 2 / 2*1.
+          // 7*8/2 = 28.
+          
+            result = result*(N-R+i)/i;
+        }
+        //Typecast double value to int and return the result.
+    return (int)result;
+    }
+};
