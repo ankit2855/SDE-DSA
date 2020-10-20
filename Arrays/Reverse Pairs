@@ -1,0 +1,92 @@
+//Optimal Solution using modified merge sort just like inversion in an array. See this question also. Both are kind of similar.
+// TC : O(nlogn) + O(N){for merge operation} + O(N){for counting the pairs)
+// SC : O(n) for temp array.
+
+Explanation : https://www.youtube.com/watch?v=S6rsAlj_iB4&list=PLgUwDviBIf0rPG3Ictpu74YWBQ1CaBkm2&index=18 
+ 
+class Solution {
+public:
+    
+    int merge(vector<int> &A, vector<int> &temp, int low, int mid, int high){
+        
+        int i;
+        int j = mid;
+        int k = low;
+        int count = 0;
+  
+  // Increment j i.e the right array's index till the point A[i] > 2*A[j].
+  // Now from the starting - 1 point till j, the number of elements in the right array
+  // are such that A[i] > 2*A[j].
+  // If no such A[j] is found for A[i] then i will be incremented.
+  //Also this loop is O(n) since we start j where we left in the previous iteration of i.
+  // This is because we know the elements in the left and right array are sorted.
+  // Therefore if A[i] > 2*A[j] then all the elements from i to mid + 1 i.e mid - i will be > 2*A[j].
+  // So when you increment i, you check if there is any other element in the right array which satisfies the condition,
+  // from the point where we left j in previous iteration. If not then increase the count by the same number as previous iteration.
+  // Since if A[i] > 2*A[j] then all the elements from i to mid + 1 i.e mid - i will be > 2*A[j].
+  
+  
+       for(i = low; i < mid; i++){
+  
+            while(j <= high && A[i] > (long long int)2*A[j]){
+                j++;
+            }
+             count += (j-mid);
+                
+        }
+        
+        i = low, j = mid;
+  
+  //merge logic
+        while(i < mid && j <= high){
+            if(A[i]<=A[j]){
+            
+                temp[k++] = A[i++];
+            }    
+            else{
+                temp[k++] = A[j++];
+            }
+    }
+    
+    //Only one of these two loops below will be executed.
+        while(i < mid){
+            temp[k++] = A[i++];
+         }
+        
+        while(j <= high){
+            temp[k++] = A[j++];
+        }
+        
+        for(i = low; i<=high; i++){
+            A[i] = temp[i];
+        }
+    
+    return count;
+    }
+    
+    int mergeSort(vector<int> &A, vector<int> &temp, int low, int high){
+        
+        int count = 0;
+        
+        if(high > low){
+            int mid = (low+high)/2;
+        
+        //Increase count for all the left children of current element.
+            count += mergeSort(A,temp,low,mid);
+        // Increase count for all the right children of current element.
+            count += mergeSort(A,temp,mid+1,high);
+            
+        // Now when you merge the above left and right subarrays, again add the count you got from merge operation.
+            count += merge(A,temp,low,mid+1,high);
+        }
+     return count;   
+    }
+    
+    int reversePairs(vector<int>& nums) {
+        
+        vector<int>temp(nums.size());
+        
+        return mergeSort(nums,temp,0,nums.size()-1);
+        
+    }
+};
