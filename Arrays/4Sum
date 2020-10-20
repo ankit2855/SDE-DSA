@@ -1,0 +1,121 @@
+// Important Question, asked in Google and Amazon.
+
+// So the first approach is to sort the array , then maintain 3 pointers i, j and k.
+// Where j = i + 1 and k = j + 1.
+// After getting the sum of nums[i] + nums[j] + nums[k].
+// So now perform binary search in k+1 to n - 1 elements to find the remaining 4th element.
+// When you find the 4 numbers whose sum = target, then store this result in a hash set to maintain unique entries.
+// TC : O(N^3logN){3 loops + binary search} + O(NlogN){sorting}.
+// Hence this is not an optimal approach.
+
+//###########################################################################################################################################################################
+
+// Optimal Approach
+// So the idea is to sort the array first.
+// Then maintain 4 pointers i.e i,j,left and right.
+// Where i = 0 to n, j = i + 1 to n, left = j + 1 to right, right = n - 1 to left. Note : The ranges are excluding the end index of every range.
+// Now these loops are nested. So we find the sum of nums[i] + nums[j] and subtract it from target.
+// Now we have the remainingSum that we need to calc.
+// So we run another nested loop where right > left , left = j + 1 and right = n - 1.
+// Now at every index we calc the sum of left and right and see if this is equal to the remainingSum.
+// If it is greater then we decrease right since it means we need a smaller element and the array is sorted in asc order.
+// If it is less then we increase left for the same reason.
+// When we find a match, we push this in result.
+
+// NOTE : The main point here is that whenever we consider any element using any index i,j, left or right
+// once we are done with the current index's calc, we skip all the indexes that are equal to previous index we just computed.
+// In this way we avoid duplicate entries. For eg i = 0, j = 1, left = 3 right = 6 and array is 1 1 1 2 2 3 3.
+// Now no matter if we find the correct sum or not next time left becomes 5 and right becomes 4. This is to avoid duplicates.
+// Similarly we skip the duplicate elements for i and j as well.
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        
+        vector<vector<int>>result;
+        
+        if(nums.empty()) return result;
+        
+        int n = nums.size();
+  
+      //sort the array, so that our left and right pointer technique works.
+      sort(nums.begin(),nums.end());
+        
+        for(int i = 0; i<n; i++){
+            
+            for(int j = i + 1; j<n; j++){
+                
+                int remainingTarget = target - nums[i] - nums[j];
+                
+                int left = j + 1;
+                int right = n - 1;
+            
+            while(right > left){
+                
+                int sumOfRightAndLeft = nums[left] + nums[right];
+                
+                if(sumOfRightAndLeft < remainingTarget){
+                       //Skipping all the elements that are duplicate to the one we just computed.
+                    
+                    while(left+1 < n && nums[left] == nums[left+1])left++;
+                     
+                     //The above loop leaves us at the last duplicate element, if there are duplicates.
+                     // else it never executes, so this step.
+
+                        ++left;
+                       
+                }
+                
+                else if(sumOfRightAndLeft > remainingTarget){
+                        
+                      //Skipping all the elements that are duplicate to the one we just computed.
+                    
+                    while( right -1 > left && nums[right] == nums[right - 1])--right;
+                      
+                      //The above loop leaves us at the last duplicate element, if there are duplicates.
+                     // else it never executes, so this step.
+
+                    --right;
+                    
+                }
+                
+                else{
+                    
+                    vector<int>temp(4);
+                    temp[0] = nums[i];
+                    temp[1] = nums[j];
+                    temp[2] = nums[left];
+                    temp[3] = nums[right];
+                    result.push_back(temp);
+                
+            // Skipping all the duplicates in both the loops below.
+            // These loops make left and right point to the next distinct digit directly
+            // as we are comparing it with the values stored in temp array.
+            
+                    while(left < right && nums[left] == temp[2])++left;
+                    
+                    while(left < right && nums[right] == temp[3])--right;
+                    
+                }
+                
+            }
+            
+            // Skip all the duplicate elements once item at j is computed.
+            // This loop will leave us at the last duplicate and then the for loop increment will
+            // move j to next distinct digit.
+            
+                while(j + 1 < n && nums[j + 1] == nums[j])++j;
+                
+            }
+        
+        
+            // Skip all the duplicate elements once item at i is computed.
+            // This loop will leave us at the last duplicate and then the for loop increment will
+            // move i to next distinct digit.
+            
+        while(i + 1 <n && nums[i+1] == nums[i])++i;
+            
+        }
+        return result;
+    }
+};
