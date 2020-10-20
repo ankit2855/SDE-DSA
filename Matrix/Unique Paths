@@ -1,4 +1,6 @@
 //Excellent Question, asked a lot of times in google.
+// Explanation : https://www.youtube.com/watch?v=t_f0nwwdg5o&list=PLgUwDviBIf0rPG3Ictpu74YWBQ1CaBkm2&index=17 
+
 
 // The brute force approach is to use recursion. The TC & SC in this solution is exponential.
 // At every i,j index you can either move down or move right.
