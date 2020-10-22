@@ -1,0 +1,52 @@
+// So the brute force approach is to sort the given array and then from the first element to last find the count of consecutive elements
+// present and return the count. This approach takes O(NlogN) + O(N) time complexity, first for sorting then for counting rhe consecutive elements.
+
+//##################################################################################################################################################################################//
+
+// The optimal approach is to store all the numbers in a hash set(unordered) since we do not need it to be in order.
+// Then iterate over all the elements in the array one by one and check if (currentElement - 1) exists in the hashset or not.
+// If yes then enter a while loop and increment the currentElement by one then find if it exists in the hashset or not.
+// We simply do this to start finding the count at the minimum element of the sequence so that we do not have to enter the while loop and count
+// the same sequence again and again thereby decreasing the time complexity from O(n^2) to O(n).
+// For eg 5 4 3 2 1, now we enter the innermost while loop only at number 1 because 1-1 =0 does not exist in the array.
+// If this condition wasn't there then we would be entering the while loop for every number making it O(n^2).
+// The total TC for this algorithm is : O(n){for storing in hashset} + O(n) for iterating the array elements + O(n){for searching all the consecutive 
+// elements of a sequence once the minimum element of that sequence is encountered. So TC = O(3N) and SC = O(N).
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        
+        if(nums.empty()) return 0;
+        
+        unordered_set<long long int>uset;
+        int maxCount = INT_MIN;
+        
+        
+        for(int i = 0; i<nums.size(); i++){
+            uset.insert(nums[i]);
+        }
+        
+        for(int i = 0; i<nums.size(); i++){
+            int count = 0;
+            long long temp = nums[i];
+  
+  // We can also use uset.count method which checks if the hashset contains an element.
+  
+  // If a number lesser than current element doesn't exist in the hashset that means this is the minimum
+  // element of that sequence.
+        if(uset.find(temp - 1) == uset.end()){
+                
+                
+                // this while loop is O(N) because it works only for the minimum value in a sequence and not for all.
+                while(uset.find(temp++) != uset.end()){
+                  
+                count++;
+            }
+        }
+            maxCount = max(count,maxCount);
+            
+        }
+        return maxCount;
+    }
+};
