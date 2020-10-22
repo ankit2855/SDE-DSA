@@ -1,0 +1,50 @@
+//GFG
+//The brute force approach is to form all the subarrays of the given array that will be O(N^3) for generating the subarrays, which can be optimized to O(N^2)
+
+// The optimal approach is to use hashing, by storing the current sum and the corresponding index at which the current sum has been calculated
+// as key value pairs.
+// First maintain a variable that stores the prefix sum or sum till now, check if this sum is 0.
+// If it is then consider this as the maxSubarray found till now since it will be from 0th index to ith index.
+// If not then search in hashmap if we aleady encountered this sum before, if yes that means after that index where this sum was previously
+// found to the current index, the sum is 0. For eg - {15,-2,2,-8,1,7,10,23} 15 is stored in hashmap with index 0 as value.
+// Now we again encounter 15 as sum on index 5, 0 to 5 sum is = 15 but at 0 sum was 15 then 1 to 5 sum is 0.
+// Now find the length of the subarray that has 0 sum using i - umap[sum], since value will be the first index at which this sum was found.
+
+int maxLen(int A[], int n)
+{
+    // Your code here
+    int sum = 0;
+    int maxCount = 0;
+    unordered_map<int,int>umap;
+    
+    for(int i = 0 ; i<n; i++){
+         
+//Maintain sum till now or prefix sum.
+        sum += A[i];
+         
+ // If sum is 0 that means from 0th index to this index the sum is 0, thus this is the largest subarray
+ // encountered till now.
+
+if(sum == 0){
+            maxCount =  i+1;
+
+}
+ // Find if sum already exists, if it does then it's value will be the first index where this sum was seen first.
+    else if(umap.find(sum) != umap.end()){
+        
+ // Subtract the first index where this sum was seen from the current index, this means all the other elements after that index to
+// current index are summing to 0.
+
+        maxCount = max(maxCount, i - umap[sum]);
+    }
+// If sum doesn't already exist, then insert it with the current index.
+
+else {
+        umap[sum] = i;
+    }
+        
+}
+    
+    return maxCount;
+}
+
