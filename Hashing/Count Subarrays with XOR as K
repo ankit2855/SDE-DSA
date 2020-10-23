@@ -1,0 +1,58 @@
+// ###### Tricky and Amazing Problem #####
+// So the naive approach is to generate all the subarrays and then check if the XOR of all the elements
+// in the subarray is equal to m i.e given XOR.
+// This approach will take O(N^3) time in extreme naive implementation and will take O(N^2) time in optimized way.
+
+//#################################################################################################################################################################################//
+// Now the optimized and tricky approach is to first calculate xorTillNow i.e prefixXOR of all the elements encountered
+// till now including the current one.
+// Then increment the count if this XOR equals to the XOR demanded, if yes then increment the count.
+// Maintain a hashMap which stores the XOR's with the number of times they have been encountered till now as key , value pair.
+// Now in case we have a prefixXOR != desired then there might be two subarrays one with XOR = desired one.
+// For eg 4 2 2 6 4, 4^2 = 6 next step, 6 ^ 2 = 4.
+// So this means there was a subarray with XOR = 4 ^ 6 (taking 6 on RHS using XOR property) that makes 6 to 4.
+// So the number of times a subarray with XOR 2 exists the number of times a subarray with 6 exists to make the current prefixXOR = 4.
+// Since we are storing the frequency along with every XOR so we will be easily able to figure out if prefixXOR ^ desiredXOR exists in the hashmap,
+// if it does then how many times has it been encountered.
+// For eg. 4 2 2 6 has prefixXOR = 2. Now check if 2 ^ 6 has been encountered, if yes then 6 was also encountered but 4 made the prefixXOR as 2.
+// So we can see there are two subarrays {4},{4,2,2} that have XOR = 4. and thus 2 subarrays {2,2,6},{6} that have XOR as 6. Which make the total XOR as 2.
+// For detailed explanation watch the video below.
+
+Explanation : https://www.youtube.com/watch?v=lO9R5CaGRPY&list=PLgUwDviBIf0p4ozDR_kJJkONnb1wdx2Ma&index=23
+
+TC : O(N) but in c++ using unordered map search can take O(N) worst case so sometimes its better to use ordered map that has logN search in worst case.
+//############################### Implementation ###########################################
+
+// C++ Program to count all subarrays having
+// XOR of elements as given value m with
+// O(n) time complexity.
+
+
+int countSubarraysHavingGivenXor(vector<int>A, int m){
+    
+    map<int,int>frequency;
+    int count = 0;
+    int xorTillNow = 0;
+    for(int i = 0; i<A.size(); i++){
+        
+        xorTillNow = xorTillNow ^ A[i];
+// Incase XORTillNow is the same as the desired XOR then a subarray has been encountered.
+        
+        if(xorTillNow == m) count++;
+
+// Check if an XOR was encountered that can make the desiredXOR != currentXOR 
+// If yes then the number of times it was encountered, the same number of times 
+// the desiredXOR was encountered.
+
+        if(frequency.find(xorTillNow ^ m) != frequency.end()){
+            
+            count += frequency[xorTillNow ^ m];
+        }
+
+// Increment the XorTillNow frequency everytime you see it by 1.
+        frequency[xorTillNow] += 1;
+        
+    }
+    
+    return count;
+}
