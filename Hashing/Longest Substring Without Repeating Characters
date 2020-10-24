@@ -1,0 +1,59 @@
+// LeetCode.
+
+// The brute force approach is to generate all the substrings first, which will take O(N^3) TC in the naive implementation
+// and O(N^2) in optimized one, then check for all the substrings if any character is repeating or not, if not then find it's length
+// to calculate the maximum length.
+
+//############################################################################################################################################################################//
+
+// The more optimal approach is to maintain a set, two pointers namely left and right both starting at 0.
+// Now iterate till right < n, and check if char at right already exists in the set or not. If not store it now and increment right. 
+// This means all the characters till now are unique. 
+// If char at right already exits in the set this means that the substring has repeating char. So in this case,
+// start removing set[s[left]] till s[s[right]] doesn't already exist.
+// Then increment right by 1.
+// The TC of this algorithm is O(2N) and SC : O(N).
+// O(2N) because for eg a b c d e a a. now when right is at index 5 left will run from 0 to 5, so in worst case left might have to move N times like right.
+
+//############################################################################################################################################################################//
+
+// Now the most optimal approach is to use a hashmap having char and it's recent index stored as key value pairs.
+// In this approach we can make the left pointer directly jump to map[s[right]] + 1 if left <= map[s[right]].
+// This is because at every character we store the recent index of the current character.
+// This will decrease the TC to O(N). 
+// We can also use frequency array instead of hashmap by representing char using their int values.
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        
+        int left = 0;
+        int right = 0;
+        
+        unordered_map<char,int>characterLastSeenAt;
+        int maxLength = 0;
+        while(right < s.size()){
+  
+  //Find if currentCharacter already exists in map, if it does then if it's index
+  // is greater than left that means in the range of left to right there is a duplicate char.
+  
+            if(characterLastSeenAt.find(s[right]) != characterLastSeenAt.end())
+            {
+            // Check if the index of character stored in map is greater than left, if yes then make left as that char's index + 1,
+            // otherwise this character is not in the range left to right.
+            
+                left = left <= characterLastSeenAt[s[right]] ? characterLastSeenAt[s[right]] +1 : left;
+            }
+            
+            // compare the current substring length with max length.
+            maxLength = max(maxLength, right - left +  1);
+            
+            //Update the last seen index of current char.
+            
+            characterLastSeenAt[s[right]] = right;
+            
+            right++;
+        }
+     return maxLength;   
+    }
+};
