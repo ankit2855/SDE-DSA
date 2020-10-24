@@ -46,6 +46,11 @@ public:
 	            }
 	        }
 	        
+		// When i == m then the gap window will shift in the right arrays
+          	// which is being iterated by j.
+          	// Say m = 2 and n = 8 so gap is 4, now after i == m,
+		// window will shift by 2 so new window will be j = 0 to 4.
+		
 	        if(j<n){
 	            for(j=0; j+gap<n; j++){
 	                
