@@ -1,0 +1,78 @@
+// So the brute force approach is to count the elements in the linkedList.
+// After counting we find the mid using operation count/2. Here if we start count from 0,
+// then we have to consider the case of even length i.e mid point should be the second mid from the two mids obtained.
+// But if we start count from 1 then that case will be managed by default.
+
+// TC : O(N){counting the length} + O(N/2){iterating till mid element}.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+  
+        int length = 1;
+        int mid = 0;
+        ListNode* temp = head;
+        
+        while(temp->next != nullptr){
+            
+            temp = temp->next;
+            length ++;
+            
+        }
+        
+        mid = length/2;
+        
+        temp = head;
+        length = 1;
+        
+        while(length <= mid && temp->next != NULL){
+            
+            temp = temp->next;
+            length++;
+        }
+        return temp;
+    }
+};
+
+//################################################################################################################################################################################//
+// The most optimal approach is to use the tortoise and hare method.
+// In this method, the tortoise and hare start from the same point i.e head after which  
+// tortoise moves by 1 step and hare moves by 2 steps.
+// Till the time hare reaches end of list, tortoise is at the middle of the list.
+// Then we simply return tortoise.
+// TC : O(N/2)
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        
+        ListNode* tortoise = head;
+        ListNode* hare = head;
+        
+        while(hare != NULL && hare->next != NULL){
+            tortoise = tortoise->next;
+            hare = hare->next->next;
+        }
+        return tortoise;
+    }
+};
