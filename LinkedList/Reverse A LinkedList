@@ -1,0 +1,58 @@
+// So the idea is to turn the pointers between elements to the opposite direction.
+// For eg 1 -> 2 -> 3 -> 4 -> NULL will be reversed as NULL <- 1 <- 2 <- 3 <- 4 
+// For doing this we maintain two dummy pointers prev and next and another pointer that is used
+// to traverse the linkedList till the end.
+// The basic idea is to store the next element of the current element in the given linkedList first, then make the
+// next pointer point to the previous element, and make then move the current element to the next element.
+// TC : O(N) and SC : O(1).
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+     
+     // Prev pointer is used to store the previous element
+     // of current element which will become the next element on reversing.
+        
+        ListNode* prev = nullptr;
+        
+     // Next pointer stores the next element of the current element
+     // so as to ensure that when we reset the next link to point to the previous element
+     // then next element is not lost.
+     
+        ListNode* next = head;
+     
+     //Pointer used to traverse in the linkedList.
+        ListNode* temp = head;
+        
+        while(temp != nullptr){
+            
+            // Saving the next element before we reset the next link
+            // to point to previous element.
+            
+            next = temp->next;
+        
+            // Now resetting the next link of current element
+            // to point to the previous element.
+            temp->next = prev;
+            
+            // Now increment previous to current node.
+            prev = temp;
+            
+            // And increment temp to next node
+            temp = next;
+           }
+           // When the loop is complete temp will point to NULL and prev will point to the last
+           // element of the original list which is head of the current list after reversing.
+       
+       return prev; 
+    }
+};
