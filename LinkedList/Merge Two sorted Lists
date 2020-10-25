@@ -1,0 +1,128 @@
+// The first approach is to declare a dummy pointer pointing to any default value.
+// Then declare another dummy pointer which is a duplicate of the first one and this will be used to form
+// a new list.
+// We traverse through both the lists and at each step we check which value is less, and thus push that value in list.
+// Exactly similar process which is done is merge operation of merge sort.
+// TC : O(n1 + n2) and SC : O(n1+n2), since we are creating a new linked list.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        
+        if(l1 == NULL)return l2;
+        if(l2 == NULL)return l1;
+       
+       //Creating a dummy node to store the head of the resulting list formed.
+       // We can also send the params as empty, then val and next both will be nullptr.
+        ListNode* dummy = new ListNode(0);
+        
+       //Creating a copy of the above dummy node which will be used in insertion.
+        ListNode* dummy2 = dummy;
+        
+        while(l1 != NULL && l2 != NULL){
+            
+            if(l1->val < l2->val){
+                dummy2->next = l1;
+                l1 = l1->next;
+            
+                }
+            else{
+                dummy2->next = l2;
+                l2 = l2->next;
+            }
+            dummy2 = dummy2->next;
+        }
+        while(l1 != NULL){
+            dummy2->next = l1;
+            l1 = l1->next;
+            dummy2 = dummy2->next;
+        }
+        
+        while(l2 != NULL){
+            dummy2->next = l2;
+            l2 = l2->next;
+            dummy2 = dummy2->next;
+        }
+       //Since dummy was pointing to 0 which was our default value, thus the resulting list
+       // starts from dummy->next;
+       return dummy->next;
+    }
+};
+
+//###########################################################################################################################################################################//
+
+// Now the above approach isn't optimal since we are using extra space.
+// This solution removes that extra space.
+
+// The idea is at the first step we need to find the list whose first element is smallest.
+// That list becomes l1.
+// Now we declare a dummy pointer result that points to this l1's first node.
+// Now we iterate both the lists and find the first node in l1 which is greater than the current node of l2,
+// while doing this we also store the previous node in a temp pointer while moving forward in l1.
+// After finding the first greater element, we assign temp->next to l2 thus this puts the current element in l2
+// at the right place in the resulting list. Now we know that the current element in l2 was less than current element in l1.
+// Therefore we swap l1 and l2 pointers , now l1 again points to smaller element to which l2 was pointing.
+// After that we repeat the same process until either of l1 or l2 equals to NULL.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        
+        if(l1 == NULL)return l2;
+        if(l2 == NULL)return l1;
+  
+  //We need to find the correct l1 since 
+  // result pointer needs to point to the smallest element in both the lists.
+  
+        if(l1->val > l2-> val) swap(l1,l2);
+        
+        ListNode* result = l1;
+        
+        while(l1 != NULL && l2 != NULL){
+        
+            ListNode* temp = NULL;
+  
+  // Loop to find the first greater node in l1 than the current node in l2.
+  // while doing so we keep storing the previous node in temp
+  // so as to merge it with l2 when the time comes.
+  // For eg l1 = 1->2 -> 4
+  // and l2 = 1->3->4. So temp->next = l2 will give 1->1->3->4. 
+  // l2 points to 1 and l1 points to 2,so we swap them.
+  
+            while(l1 != NULL && l1->val <= l2->val){
+                temp = l1;
+                l1=l1->next;
+            }
+  // Now when we do temp->next = l2, the node at l2 comes at it's
+  // correct position in resulting list.
+            temp->next = l2;
+        
+  // We know node value at l1 will be greater than node value of l2, therefore 
+  // we swap l1 and l2 pointers so that l1 again points to the smallest element of the remaining
+  // items.
+            swap(l1,l2);
+            
+        }
+        return result;
+    }
+};
