@@ -1,0 +1,72 @@
+// So the first approach is to declare a length variable with a starting value of 1.
+// And then count the length of the list.
+// Now find k = length - n;
+// Again traverse from length 1 to k and using a dummy pointer move forward in the list.
+// When this loop ends you will be at the node whose next element needs to be deleted.
+// So you simply do node->next = node->next->next. After this you can also use the inbuilt delete operator
+// to delete the node, but that won't affect our answer.
+// TC : O(2n), SC : O(n).
+
+//##################################################################################################################################################################################//
+
+// Optimal approach is to use a dummy node that has a value of 0 and it's next element is head.
+// Then use two more pointers which point to this dummy node namely fast and slow.
+// So now traverse from i = 1 to i = N and move fast pointer forward at each iteration.
+// Now when this loop is over start moving fast and slow by 1 until fast->next != NULL.
+// At this point slow will be pointing to the element whose next node needs to be deleted.
+// So we simply do slow->next = slow->next->next.
+// Here edge case for list = 1->2->3->4->5->6 & n = 6(means we need to delete 1st node) will be fast will move to the end node and 
+// slow will be pointing to dummy node d0 which points to head.
+// So we will not enter the second loop and slow->next will become slow->next->next i.e node 2.
+// Therefore we return dummy->next and not head in the answer. Because no matter what, dummy->next
+// will point to the correct head.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        
+        ListNode* dummy = new ListNode();
+        
+        // Dummy node's value = 0 and it points to head.
+        // See constructor in definition.
+        dummy->next = head;
+        
+        //Two pointers pointing to dummy.
+        ListNode* fast = dummy;
+        ListNode* slow = dummy;
+   
+        int i = 1;
+        while(i <= n){
+            
+            // Move fast pointer forward n times.
+            // where n is the node from back to be deleted.
+            fast=fast->next;
+            i++;
+        }
+        //When fast will point to NULL, slow will point to
+        // the node whose next node needs to be removed.
+        
+        while(fast->next != NULL){
+            slow = slow->next;
+            fast = fast->next;
+        }
+        // Resetting the next link of slow i.e deleting 
+        // node next to slow.
+        
+        slow->next = slow->next->next;
+        
+    // Returning dummy->next because dummy->next = head
+    
+    return dummy->next;
+    }
+};
