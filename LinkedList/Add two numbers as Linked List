@@ -1,0 +1,132 @@
+//TC : if N2 < N1 O(N2) + O(N1) ; SC : O(N1 + N2)
+// Carry is calculated as carry = sum / 10;
+// Sum is calculated as sum = sum % 10;
+// The above two conditions handle the cases where sum > 9.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        
+        int carry = 0;
+        
+        // Result has a val of 0 and next pointer is nullptr.
+        // See definition of ListNode.
+        ListNode* result = new ListNode();
+        ListNode* dummy = result;
+        while(l1 != NULL && l2 != NULL){
+            
+            int sum = l1->val + l2->val + carry;
+            carry = sum / 10;                
+            sum = sum % 10;
+               
+          
+            result->next = new ListNode(sum);
+            result = result->next;
+            
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+        while(l1 != NULL){
+             int sum = l1->val;
+            
+            if(carry){
+                sum += carry;
+                carry = sum / 10;
+                sum = sum % 10;
+                }
+                result->next = new ListNode(sum);
+                result = result->next;
+                l1 = l1->next;
+            }
+        
+    
+        while(l2 != NULL){
+            int sum = l2->val;
+            if(carry){
+                sum += carry;
+                carry = sum / 10;  
+                    sum = sum % 10;
+            }
+                result->next = new ListNode(sum);
+                result = result->next;
+                l2 = l2->next;
+            }
+        
+        
+        if(carry){
+            result->next = new ListNode(carry);
+            result = result->next;
+        }
+    return dummy->next;
+    }
+};
+
+//################################################################################################################################################################################//
+// TC : O(N1 + N2)
+// SC : O(N1) if N1 > N2.
+// carry = sum / 10;
+// sum = sum % 10;
+// Overall the process is same as above the only difference is that
+// we do this in a single loop.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        
+        int carry = 0;
+        // Result has a val of 0 and next pointer is nullptr.
+        // See definition of ListNode.
+        
+        ListNode* result = new ListNode();
+        ListNode* dummy = result;
+        
+        while(l1 != NULL || l2 != NULL || carry){
+            
+            int sum = 0;
+  
+            if(l1 != NULL){
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            
+            if(l2 != NULL){
+                sum += l2->val;
+                l2 = l2->next;
+                
+            }
+
+            sum += carry;
+            carry = sum / 10;                
+            sum = sum % 10;
+               
+            result->next = new ListNode(sum);
+            result = result->next;
+            
+     }
+    
+     return dummy->next;
+    }
+};
+
+
+
