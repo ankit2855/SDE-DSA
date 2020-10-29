@@ -1,0 +1,78 @@
+// One solution can be store all the elements of the linked List in an array
+// and then check if reverse of array = array.
+
+// Another solution can be to reverse the list and check if this is equal to the previous list at every step.
+// Both of these approaches require O(N) extra space.
+
+//##################################################################################################################################################################################//
+// The most optimal solution is to find the mid of the list using tortoise and hare method.
+// Then reverse the list from mid to the last node and then keep two pointers one at head of the list
+// and one at tail. Then at each step check for equality. If they are not equal then return false.
+// For eg 1->2->2->1 beomes 1->2 and NULL<-2<-1
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+  
+  //Function that reverses the list,
+  // here part of the list is reversed and NULL is added. 
+  // Since 2nd part has NULL and first part doesn't have NULL at the end.
+  // Therefore at the last loop we run till slow != NULL and not till fast != NULL.
+  
+  ListNode* reverseList(ListNode* head){
+        
+        ListNode* prev = NULL;
+        ListNode* next;
+        
+        while(head != NULL){
+            next = head->next;
+            head->next = prev;
+            prev = head;
+            head = next;
+        }
+        return prev;
+    }
+    bool isPalindrome(ListNode* head) {
+        
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while(fast != NULL && fast->next != NULL){
+            
+            slow = slow->next;
+            fast = fast->next->next;
+            
+        }
+        // After this loop we will have mid if length is odd
+        // and mid + 1 if length is even assigned to slow.
+        // So now we reverse this part till the end of the list
+        // 1->2->2->1 becomes 1->2 & NULL <- 2 <- 1.
+        
+        slow = reverseList(slow);
+        fast = head;
+        
+        // Here loop runs till slow != NULL because slow pointer 
+        // runs in the right list where we have NULL at the end of the list( we assigned this manually in reverse function).
+        // But left list doesn't have a NULL at the end of the list.
+        
+        while(slow != NULL){
+            // return true at any point if fast and slow pointer
+            // have different values.
+            if(fast->val != slow->val)return false;
+            
+            fast = fast->next;
+            slow = slow->next;
+        }
+        
+        return true;
+    }
+};
