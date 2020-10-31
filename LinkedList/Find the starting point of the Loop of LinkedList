@@ -1,0 +1,66 @@
+//Floyd warshal's cycle detection algorithm.
+// We simply iterate the complete linkedList till either
+// Fast!=NULL or Fast->next != NULL.
+// since we are doing fast = fast->next->next therefore
+// we can directly arrive at null or at the element previous to null
+// therefore keeping this check.
+
+// Also maintaining a flag that checks whether a cycle was detected or not.
+// If detected then we continue according to the algorithm, we assign either one of the
+// pointer to the head. Now this time we move each pointer by one node at a time and according to the
+// algorithm this time when fast and slow pointers will meet they will be at the starting node of the loop.
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+ 
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        
+        if(head == NULL || head->next == NULL)return NULL;
+        
+        ListNode* fast = head->next->next;
+        ListNode* slow = head->next;
+        bool cycleFound = false;
+        
+        while(fast != NULL && fast->next != NULL){
+             
+            if(fast == slow) {
+     
+                cycleFound = true;   
+                break;
+            }
+          
+            fast = fast->next->next;
+            slow = slow->next;
+        
+                
+        }
+        // If there is no cycle then there will be no
+        // starting node of the loop / cycle hence return NULL.
+        
+        if(!cycleFound)return NULL;
+        
+        // Resetting fast to start of the list 
+        // This is done because when we
+        // exit the loop below slow and fast pointers
+        // will meet at the starting node of the loop.
+        
+        fast = head;
+        
+        while(slow != fast){
+            
+            slow = slow->next;
+            fast = fast->next;
+            
+        }
+       
+        return slow;
+    }
+};
