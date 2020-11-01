@@ -1,0 +1,75 @@
+// So the basic idea is to find the nodes that have children. 
+// Then iterate the child till we encounter the last node.
+// Now connect this last node of child to next node of parent node
+// And if parent's next node exists then assign it's previous to the last node of the
+// child. After that connect parent's next pointer to point to this child's first node.
+// And at last destroy the child pointer by making it NULL.
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+};
+*/
+
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        
+        Node* dummy = head;
+        
+        while(dummy != NULL){
+            
+            // While current node's child node is absent
+            // move to the next node.
+            while(dummy != NULL && dummy->child == NULL){
+                
+                dummy = dummy->next;
+              
+            }
+            // Incase dummy has reached NULL then when we
+            // assign dummy->child to temp below it will be an error.
+            // So exit the loop.
+            if(dummy == NULL) break;    
+            
+            Node* temp = dummy->child;
+            
+            // Loop to reach the last node 
+            // of child list.
+            
+            while(temp->next != NULL){
+                
+                temp = temp->next;
+                
+            }
+        
+            // Now connect last node of child with parent node's 
+            // next node
+            
+            temp->next = dummy->next;
+            
+            // Also if parent node's next node exists i.e it is
+            // not NULL then assign it's previous pointer to last node 
+            // of child list.
+            
+            if(dummy->next != NULL) dummy->next->prev = temp;
+            
+            // Connect the first node of child list
+            // to parent's next pointer and connect 
+            // child's first node's previous pointer to parent
+            // node. 
+            // At last destroy the child pointer by making it NULL.
+            // This step is imp as the first loop will make the iterator point
+            // to the next node only when current node's child node equals to NULL.
+            
+            dummy->next = dummy->child;
+            dummy->child->prev = dummy;
+            dummy->child = NULL;
+        }
+        return head;
+    }
+};
