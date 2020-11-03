@@ -1,0 +1,78 @@
+//So the basic idea is to find the first kth node that needs to
+// become the new head now and then use this kth node to form new links
+// TC : O(n) SC : O(1).
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        
+        if(head == NULL)return NULL;
+        
+        int length = 1;
+        
+        ListNode* temp = head;
+        
+        while(temp->next != NULL){
+            temp = temp->next;
+            length++;
+        }
+
+// After calculating length we check if k is greater than length
+// if yes then the effective rotations become k%length.
+        if(k >= length) k = k % length;
+     
+     // If there is only 1 node or no rotations are there
+     // then return the list as it is.
+        if(head->next == NULL || k == 0){
+            return head;
+        }
+        
+        int lengthCheck = 1;
+        temp = head;
+        
+        
+        // Iterate the list till it does not reach the kth - 1 element
+        
+        while(lengthCheck < length - k){
+        
+            temp = temp->next;
+            lengthCheck++;
+        }
+        
+        ListNode* dummy = NULL;
+        
+        // Pick the first pointer of the sublist
+        // which are the nodes that need to be rotated.
+        if(temp->next != NULL)
+            dummy = temp->next;
+        
+        // Destroy the previous link.
+        temp->next = NULL;
+    
+        ListNode* dummy2 = dummy;
+        
+        // Pick the end of the sublist that needs to be rotated.
+        while(dummy2->next != NULL) dummy2 = dummy2->next;
+        
+        // The next node of the last node of sublist
+        // will be the previous head node
+        dummy2->next = head;
+        
+        // change the head to first node of sublist that was rotated.
+        head = dummy;
+  
+      return head;
+    }
+   
+  
+};
