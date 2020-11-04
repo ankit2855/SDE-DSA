@@ -1,0 +1,80 @@
+// So the idea is just like we did in 4SUM. Sort the array first
+// then maintain two pointers start = i+1 and end = n - 1 and check
+// if nums[i] + nums[start] + nums[end] == 0. If sum is > 0 then 
+// decrement end and if sum is < 0 then increment start. 
+// To avoid duplicate entries we skip the elements we have seen already in the two loops.
+// TC : O(N*N) + NLogN{sorting}.
+vector<vector<int>> threeSum(vector<int>& nums) {
+        
+        vector<vector<int>>ans;
+    
+    // If size < 3 then there cannot be 3 nums.
+    
+        if(nums.size() < 3){
+            return ans;
+        }
+        
+        sort(nums.begin(),nums.end());
+    
+      int i = 0 , start, end;
+      
+      while(i < nums.size()){
+      
+        // Since the array is sorted therefore
+        // if a num is > 0 then all the nums next to it
+        // will be > 0. So exit from here.
+        
+            if(nums[i] > 0) break;
+            
+            start = i + 1;
+            end = nums.size()-1;
+            
+            while(start < end){
+                
+                int totalSum = nums[i] + nums[start] + nums[end];
+                
+                if(totalSum > 0){
+                      
+                     // Till the point you find duplicate element of the current element move
+                     // end pointer. Note that this will stop at the last duplicate 
+                     // element.
+                     
+                    while(end - 1 > start && nums[end] == nums[end-1]) end--;
+                
+                    end --;
+                }
+                else if(totalSum < 0){
+                   
+                      // Till the point you find duplicate element of the current element move
+                     // start pointer. Note that this will stop at the last duplicate 
+                     // element.
+                    while(start + 1 < end && nums[start] == nums[start+1])start++;
+                    
+                     start++;
+                }
+                else{
+                    vector<int>temp(3);       
+                    
+                    temp[0] = nums[i];
+                    temp[1] = nums[start];
+                    temp[2] = nums[end];
+                
+                    ans.push_back(temp);
+                    
+                    // This will stop at the next distinct element since we are comparing
+                    // the value from the temp array with elements and not the next element to the 
+                    // current element.
+                    
+                    while(end > start && nums[end] == temp[2])end--;
+                    while(start < end && nums[start] == temp[1])start++;
+                }
+            }
+        // This will stop at the last duplicate element of the current element
+        // if any.
+        while(i < nums.size()-1 && nums[i+1] == nums[i])i++;
+        
+            i++;
+        }
+    return ans;    
+    }
+    
