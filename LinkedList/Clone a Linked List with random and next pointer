@@ -1,0 +1,105 @@
+// So the basic idea is to insert a copy of each node
+// after the original node in the given list. 
+// Then reset the next pointers so that original node points to its
+// copy and it's copy points to another original node.
+// Now we know that copy's node's random pointer will be pointing
+// to the copy of original node to which the copy node's original random ptr is
+// pointing. So we can get the next node of the original node to which the random ptr of
+// original node points. After doing all this we can find the head and tail of thecopy list and
+// unlink it from the original list.
+
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        
+        Node* temp = head;
+        Node* headOfCopyList = nullptr, *tailOfCopyList = nullptr;
+        Node* next = nullptr;
+        
+        while(temp != NULL){
+
+// Form a copy node with current node's value.
+        
+        Node* copyOfList = new Node(temp->val);
+        
+        // Save the next pointer in another pointer because this will
+        // now reset to point to copy node and we need next ptr to move fwd in the
+        // list.
+            next = temp->next;
+        
+        // Make original node's next ptr point to
+        // it's copy.
+            temp->next = copyOfList;
+            
+         // Make the copy node point to the next
+         // original node in the list
+         
+            copyOfList->next = next;
+         
+         // Increment temp ptr fwd.
+          temp = next;
+            
+        }
+        
+        temp = head;
+        
+        while(temp){
+        
+          // temp will point to the second last element because after
+          // every original node we have a copy node so last node will be a copy node.
+          
+          // temp->next because temp will point to an original node and temp->next 
+          // will point to a copy node.
+          // If original node's random ptr is not null then make the copy node's random
+          // ptr point to copy node of the original node to which the random pointer of current 
+          // original node was pointing.
+          
+            (temp->next)->random = temp->random ? (temp->random)->next : nullptr;
+          
+          // Iterating over the original nodes only.
+            temp = temp->next->next;
+        }
+     
+    temp = head;
+    
+    
+    while(temp!= NULL){
+        
+        if(!headOfCopyList){
+            // If head has not been set yet then
+            // set the head and tail so that in next iteration
+            // we can move the tail forward to insert more nodes.
+            
+            headOfCopyList = temp->next;
+            tailOfCopyList = temp->next;
+        }
+        else{
+            tailOfCopyList->next = temp->next;
+            tailOfCopyList = tailOfCopyList->next;
+        }
+        
+        // Resetting the original list and removing the copy nodes.
+        temp->next = (temp->next)->next;
+        
+        temp = temp->next;
+    }
+
+    return headOfCopyList;
+}
+};
