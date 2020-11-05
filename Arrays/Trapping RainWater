@@ -1,0 +1,61 @@
+// So the brute force solution is for every element other than 
+// first and last , find it's left max 
+// element and it's right max element and then find the minimum of those two.
+// Now subtract current element's height from this. So we will get the amount of water
+// that can be stored in the current element.
+// TC : O(N^2).
+
+//#####################################################################################################################################################################################//
+
+// So the optimal solution is same as above other than
+// the fact that we use prefix array and suffix array to get left max
+// and right max element of the current element.
+// TC : O(3N) SC : O(2N)
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        
+        if(height.size() == 0){
+            
+            return 0;
+        }
+        int rmax[height.size()];
+        int lmax[height.size()];
+  
+  // Set the last element as max in rmax's last index.
+      rmax[height.size()-1] = height[height.size()-1];
+  
+  // Set the first element as max in lmax's first index.
+        lmax[0] = height[0];
+    
+        int result = 0;
+    
+    // Computing left max for each element.
+        for(int i = 1; i<height.size(); i++){
+            lmax[i] = max(height[i],lmax[i - 1]);
+        }
+   // Computing right max for each element.
+   
+        for(int j = height.size()-2; j >= 0; j--){
+            
+            rmax[j] = max(rmax[j + 1],height[j]);
+            
+        }
+   
+   // Now finding the amount of rainwater by finding the minimum
+   // of lmax height and rmax height and then subtracting the height of current
+   // element from it.
+   
+   // First and last walls are excluded because we cannot store any
+   // water in them since first doesn't have a left supporting wall and last
+   // doesn't have a right supporting wall.
+   
+    for(int i = 1; i<height.size()-1; i++){
+        
+        result = result + (min(lmax[i],rmax[i]) - height[i]);
+    }
+        
+        return result;
+    }
+};
