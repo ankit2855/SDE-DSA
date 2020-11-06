@@ -1,0 +1,30 @@
+// Maintain a prev index that points to the
+// last distinct element encountered in the array.
+// When you encounter an element other than the element
+// at prev index then increment prev and store the number at
+// new prev index.
+// At the end return prev + 1 index as the result since it is mentioned
+// that we only need to return the index till where array is sorted and don't need
+// to care what's left behind.
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+     
+        if(nums.empty())return 0;
+        int prev = 0;
+        int i = 0;
+        
+        while(i<nums.size()){
+            
+            if(nums[i] != nums[prev]){
+                prev++;
+                nums[prev] = nums[i];
+            }
+            
+            i++;
+        }
+    
+    return prev + 1;
+    }
+};
