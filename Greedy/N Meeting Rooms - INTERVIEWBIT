@@ -1,0 +1,40 @@
+// So the basic idea is to store all the values of array
+// in map having the intervals as keys and their count as values
+// Whenever you encounter a start interval, increment the value of it's key by 1
+// and whenever you encounter an end interval, decrement the value of it's key by 1.
+
+// In the end return the max count encountered after traversing the 
+// map. This method works by finding the collisions in the intervals
+
+// Map takes O(NlogN) to store the values but O(logN) search operation.
+
+int Solution::solve(vector<vector<int> > &A) {
+
+if(A.size() == 0)return 0;
+
+    map<int,int>temp;
+    int count = 0;
+    int result = -1;
+    
+    for(int i = 0; i<A.size(); i++){
+    
+    // Increment the start interval key's val by 1
+        temp[A[i][0]]++;
+    
+    // Decrement the end interval key's val by 1
+        temp[A[i][1]]--;
+    }
+    
+    map<int,int>::iterator it;
+    
+    for(it = temp.begin(); it!= temp.end(); it++){
+    
+    // Now add the second item of each element of map in count
+    // where 1st item is the interval and 2nd element is it's count.
+        count += it->second;
+        
+        result = max(result,count);
+    }
+
+return result;    
+}
