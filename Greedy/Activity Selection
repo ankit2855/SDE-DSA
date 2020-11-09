@@ -1,0 +1,89 @@
+// GFG
+
+// INTUITION - 
+// So the basic idea behind greedy approach is to choose the activities the fastest
+// so that we can cover maximum number of activities in the given input array.
+// For eg if we need to attend maximum lectures in a day then we will start with the one that 
+// ends the first and thereafter we will choose all those lectures that end the quickest to cover
+// or attend max psooible lectures.
+
+// ALGO - 
+// So we first construct a array of type struct whose every element contains a start,end and position field.
+// Now we sort this array based on the ending time of activity in ascending order. Then we choose the first
+// activity and mark it's ending time and increment the count by 1. Now the next activity we choose,
+// we make sure that it's start time is either equal to or greater than the ending time we currently have.
+// Then we increment count and update the ending time as well. In this way we are able to select maximum number
+// of activities because we choose the ones that end the quickest.
+
+// TC : O(NLOGN) + O(2N) [ sorting + assigning merge array values + traversing the merged array again to find the count]
+// SC : O(N) for the merged array having start, end and position fields.
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+ // } Driver Code Ends
+
+struct activity {
+    int start;
+    int end;
+    int pos;
+};
+
+bool cmp(struct activity a1,struct activity a2){
+    return a1.end < a2.end;
+}
+int activitySelection(int start[], int end[], int n){
+    // Your code here
+    
+    struct activity intervals[n];
+    
+    for(int i = 0; i<n; i++){
+        intervals[i].start = start[i];
+        intervals[i].end = end[i];
+        intervals[i].pos = i + 1;
+    }
+    
+    sort(intervals, intervals+n, cmp);
+    
+    int count = 1;
+    int endTime = intervals[0].end;
+    
+    for(int i = 1; i<n; i++){
+        
+        if(intervals[i].start >= endTime){
+            
+            count++;
+            endTime = intervals[i].end;
+        }
+    }
+
+    return count;
+}
+
+// { Driver Code Starts.
+int main()
+{
+    int t;
+    
+    //testcases
+    cin >> t;
+    while(t--)
+    {
+        //size of array
+        int n;
+        cin >> n;
+        int start[n], end[n];
+        
+        //adding elements to arrays start and end
+        for(int i=0;i<n;i++)
+            cin>>start[i];
+        for(int i=0;i<n;i++)
+            cin>>end[i];
+        
+        //function call
+        cout << activitySelection(start, end, n) << endl;
+    }
+    return 0;
+}
+  // } Driver Code Ends
