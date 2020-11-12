@@ -1,0 +1,53 @@
+// GFG.
+
+// So the brute force solution will be to Run two nested loops the outer loop from start to end and inner loop from i+1 to end.
+// For every iteration of outer loop find the count of intervals that intersect with the current interval.
+// Update the answer with maximum count of overlap in each iteration of outer loop.
+// Print the answer.
+// TC : O(N^2) SC :O(1).
+
+//############################################################################################################################################################################//
+
+// So the optimal solution is to sort both the arrival and departure time arrays.
+// And maintain a platforms variable that increments when a train arrives and decrements when a train departs.
+// Basically we are maintaining a count of the minimum number of platforms needed to achieve what we need. Say 3 trains
+// arrive before any of them departs so we will need atleast 3 different platforms since a train cannot arrive on another trains
+// platform before that platform is empty.
+
+
+int findPlatform(int arr[], int dep[], int n)
+{
+    int platformsNeededAtPresent = 0;
+    int minimumPlatformsNeeded = 0;
+    
+    sort(arr, arr+n);
+    sort(dep, dep+n);
+    
+    int i = 0,j = 0;
+    
+    while(i<n && j<n){
+        // If a train arrives before another train departs or
+        // at the time it departs then we need another platform.
+        
+        if(arr[i] <= dep[j]){
+            platformsNeededAtPresent++;
+            i++;
+        }
+        // If a train departs then we have an empty platform now which
+        // is not in use now so we decrement the platformsNeededAtPresent value.
+        else{
+            platformsNeededAtPresent--;
+            j++;
+        }
+        
+        // Don't confuse the max operator here, basically it is checking if the platforms that we
+        // are taking as minimum are sufficient enough to handle the arrivals and departures of different trains.
+        // for eg let's take the case above where 3 trains arrive before any of them departs so we cannot reuse the platforms
+        // so the eqn below becomes -> minimumPlatformsNeeded = max(1,3).
+        
+        minimumPlatformsNeeded = max(minimumPlatformsNeeded,platformsNeededAtPresent);
+    }
+    
+return minimumPlatformsNeeded;
+}
+
