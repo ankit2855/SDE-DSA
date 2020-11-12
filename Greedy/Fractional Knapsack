@@ -1,0 +1,77 @@
+// GFG.
+
+// So unlike in 0/1 Knapsack, here you can even choose a fraction of
+// a value of a quantity of it's weight is more than the left weight that we can fill.
+
+// The approach used here is to sort the items in ascending order
+// of their weight.
+// Then we keep on adding the items one by one unless the leftover weight in the
+// sac is less than the current element's weight. Now in this case we fill this leftover weight
+// fractionally and exit the loop.
+// The value obtained at the end will be the maximum value that could be achieved.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Item{
+    int value;
+    int weight;
+};
+
+
+ // } Driver Code Ends
+
+
+//class implemented
+/*
+struct Item{
+    int value;
+    int weight;
+};
+*/
+
+bool cmp(Item a1, Item a2){
+    return a1.weight < a2.weight;
+}
+
+// function to return fractionalweights
+double fractionalKnapsack(int W, Item arr[], int n)
+{
+    double result = 0;
+    double currentWeight = 0;
+
+// sorting the items based on their weight in asc order.
+    sort(arr,arr+n,cmp);
+    
+    for(int i = 0; i<n; i++)
+    {
+      
+      // calculate what will be the resulting weight if we choose the current element.
+        double newWeight = currentWeight + arr[i].weight;
+        
+        // if it is greater than the max weight the sac can hold then take the fractional
+        // value of the item. 
+        if(newWeight > W){
+            double remainingWeight = W - currentWeight;
+            // So we calculate the value per unit weight of the item and then multiply it
+            // with the weight that we have left over in the sac. This basically means we can pick only
+            // that fraction of item which has a weight equal to the weight left in sac. So we find the value
+            // of the item for this fraction of weight.
+            
+            result += (double)((double)(arr[i].value/arr[i].weight)*(double)remainingWeight);
+            
+            // Breaking out since after this condition the sac will be full.
+            break;
+        }    
+        else{
+        
+        // If we can pick the complete item, then we pick it
+        // and add it's weight in currentWeight of sac.
+            result += arr[i].value;
+            currentWeight += arr[i].weight;
+           
+        }
+    }
+    
+    return result;
+} 
