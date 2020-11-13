@@ -1,0 +1,66 @@
+// GFG
+
+// So the naive approach is to generate all the subsets of the jobs and then check
+// if those subsets satisfy the job sequencing requirement.Keep a track of maxProfit while
+// doing this. TC: exponential.
+
+//#################################################################################################################################################################################//
+
+// Another approach is to first sort the given array based on the profit in descending order.
+// Then maintain a slot array of type bool which tells us which all slots are available for us to
+// put the current job in that slot.
+// We try to choose the last possible and available slot for the job in the slot array which is decided
+// based on it's deadline. For eg if we have a job whose deadline is 3 so we have slot 0 - 1, 1-2 and 2-3 so
+// we choose 2-3 if it's available else 1-2 otherwise 0-1.(Each job takes 1 unit of time to complete and we need to
+// complete it before it's deadline so as to earn the profit).
+// TC : O(N^2) + O(NlogN)
+// SC : O(N).
+// NOTE - THIS APPROACH CAN BE FURTHER OPTIMIZED USING DISJOINT SET DATA STRUCTURE.
+
+// This is a greedy approach since we first sort the items based on the max profit
+// and then choose them if we have slots available to incorporate them.
+
+bool cmp(Job j1, Job j2){
+    
+    return j1.profit > j2.profit;
+    
+}
+
+// Prints minimum number of platforms reqquired 
+
+pair<int,int> JobScheduling(Job arr[], int n) 
+{ 
+    // your code here
+    sort(arr,arr+n,cmp);
+    bool slot[n];
+    int resultingProfit = 0;
+    int jobCount = 0;
+    
+    
+    // Initialize all the slots in beginning to false
+    // This means all the slots are available.
+    
+    for(int i = 0; i < n; i++){
+        slot[i] = false;
+    }
+    for(int i = 0; i < n; i++){
+              
+              // Here this min(n,arr[i].dead condition for the cases
+              // where arr[i].dead > n so we will have only 0 to n slots to
+              // alot to the job.
+              
+            for(int j = min(n,arr[i].dead) - 1; j>=0; j--){
+                // If the slot is available
+                // Include the profit in result, increment the 
+                // jobCount and mark the slot as used / unavailable.
+                if(slot[j] == false){
+                    resultingProfit += arr[i].profit;
+                    jobCount++;
+                    slot[j] = true;
+                    break;
+                }
+            }
+    }
+    
+    return make_pair(jobCount,resultingProfit);
+} 
